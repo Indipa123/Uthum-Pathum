@@ -52,28 +52,32 @@ export function useBag() {
   const storageError = useState('shop-bag-error', () => false)
   const quantity = computed(() => lines.value.reduce((sum, line) => sum + line.quantity, 0))
   let pending = Promise.resolve()
+  let loading
 
-  onMounted(async () => {
-    try {
-      const saved = await readBag()
-      if (!lines.value.length && Array.isArray(saved)) lines.value = saved
-    } catch {
+  function load() {
+    loading ||= readBag().then(saved => {
+      if (Array.isArray(saved)) lines.value = saved
+    }).catch(() => {
       storageError.value = true
-    } finally {
+    }).finally(() => {
       loaded.value = true
-    }
-  })
+    })
+    return loading
+  }
+
+  onMounted(load)
 
   watch(lines, value => {
     if (!loaded.value) return
     const snapshot = JSON.parse(JSON.stringify(value))
     pending = pending.then(() => writeBag(snapshot)).catch(() => { storageError.value = true })
-  }, { deep: true })
+  }, { deep: true, flush: 'sync' })
 
   function add(line) {
     const existing = line.kind === 'gift' && lines.value.find(item => item.kind === 'gift' && item.productId === line.productId)
     if (existing) existing.quantity = Math.min(20, existing.quantity + 1)
     else lines.value.push(line)
+    return pending
   }
 
   function setQuantity(id, value) {
@@ -83,8 +87,13 @@ export function useBag() {
   }
 
   function remove(id) {
-    lines.value = lines.value.filter(item => item.id !== id)
+    return removeLines([id])
   }
 
-  return { lines, quantity, storageError, add, setQuantity, remove }
+  function removeLines(ids) {
+    lines.value = lines.value.filter(item => !ids.includes(item.id))
+    return pending
+  }
+
+  return { lines, quantity, loaded, storageError, load, add, setQuantity, remove, removeLines }
 }

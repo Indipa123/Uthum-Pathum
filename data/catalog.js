@@ -60,6 +60,7 @@ export const stickerChoices = [
 
 export const cardById = Object.fromEntries(cards.map(card => [card.id, card]))
 export const giftById = Object.fromEntries(gifts.map(gift => [gift.id, gift]))
+export const occasionById = Object.fromEntries(occasions.map(occasion => [occasion.id, occasion]))
 export const themeById = Object.fromEntries(themes.map(theme => [theme.id, theme]))
 export const fontById = Object.fromEntries(fonts.map(font => [font.id, font]))
 export const stickerById = Object.fromEntries(stickerChoices.map(sticker => [sticker.id, sticker]))
