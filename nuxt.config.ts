@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
+import { cards, gifts } from './data/catalog.js'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -7,7 +8,13 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   vite: { plugins: [tailwindcss()] },
   nitro: {
-    prerender: { routes: ['/'] },
+    prerender: {
+      routes: [
+        '/', '/occasions', '/cards', '/gifts', '/studio', '/search', '/bag', '/checkout', '/order',
+        ...cards.map(card => `/cards/${card.id}`),
+        ...gifts.map(gift => `/gifts/${gift.id}`),
+      ],
+    },
     publicAssets: [{
       dir: fileURLToPath(new URL('./node_modules/@mediapipe/tasks-vision/wasm', import.meta.url)),
       baseURL: '/vision',

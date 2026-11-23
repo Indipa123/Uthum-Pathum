@@ -9,4 +9,6 @@ npm run dev
 
 Run `npm run generate` for a static build at `.output/public`.
 
+The storefront has dedicated routes for the card and gift catalogs, individual products, occasions, Card Studio, search, the bag, and checkout. Product pages are generated as static HTML and can be linked to directly.
+
 Checkout uses sample prices and delivery options. Payments and fulfillment are simulated. Card images, cart data, and digital exports are handled in the browser. Smart Crop uses MediaPipe Face Detector. The browser loads the model from Google's public model repository and runs face detection locally. Shoppers can position photos manually if the model is unavailable.
