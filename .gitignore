@@ -1,0 +1,10 @@
+node_modules/
+.nuxt/
+.output/
+/dist
+.data/
+.openai/hosting.json
+.DS_Store
+.env
+.env.*
+generated_images/
